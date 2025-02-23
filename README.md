@@ -1,9 +1,8 @@
-# Symfony Docker
+# Symfony Docker Discord Message Eraser Bot
 
-A [Docker](https://www.docker.com/)-based installer and runtime for the [Symfony](https://symfony.com) web framework,
-with [FrankenPHP](https://frankenphp.dev) and [Caddy](https://caddyserver.com/) inside!
+Schedule automated message deletion tasks in your Discord channels.
 
-![CI](https://github.com/dunglas/symfony-docker/workflows/CI/badge.svg)
+![CI](https://github.com/kidthales/symfony-docker-discord-message-eraser-bot/workflows/CI/badge.svg)
 
 ## Getting Started
 
@@ -44,8 +43,8 @@ with [FrankenPHP](https://frankenphp.dev) and [Caddy](https://caddyserver.com/) 
 
 ## License
 
-Symfony Docker is available under the MIT License.
+Symfony Docker Discord Message Eraser Bot is available under the MIT License.
 
 ## Credits
 
-Created by [Kévin Dunglas](https://dunglas.dev), co-maintained by [Maxime Helias](https://twitter.com/maxhelias) and sponsored by [Les-Tilleuls.coop](https://les-tilleuls.coop).
+- [Symfony Docker](https://github.com/dunglas/symfony-docker)

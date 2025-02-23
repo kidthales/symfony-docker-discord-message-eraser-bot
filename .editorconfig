@@ -55,3 +55,7 @@ indent_style = tab
 
 [*.*Caddyfile]
 indent_style = tab
+
+[Makefile]
+indent_style = tab
+indent_size = 8
