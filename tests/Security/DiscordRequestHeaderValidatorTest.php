@@ -51,6 +51,9 @@ final class DiscordRequestHeaderValidatorTest extends KernelTestCase
         }
     }
 
+    /**
+     * @return void
+     */
     public function test_validate_throws_discord_request_header_validation_exception(): void
     {
         self::bootKernel();
@@ -69,17 +72,4 @@ final class DiscordRequestHeaderValidatorTest extends KernelTestCase
             self::assertSame('hex2bin(): Input string must be hexadecimal string', $e->getPrevious()->getMessage());
         }
     }
-
-    /*public function test_validate_fail(): void
-    {
-        self::bootKernel();
-
-        $subject = self::getSubject();
-        $request = Request::create(uri: '/', method: 'POST', content: '"Test content."');
-        $request->headers->set(DiscordRequestHeaderValidator::HEADER_ED25519, 'test-ed25519');
-        //$request->headers->set(DiscordRequestHeaderValidator::HEADER_ED25519, 'e3d8ccc158dea97fd51e52a62125de91516f678c1e4d9e406b51f6df7aa37a11f7cecb5773964848a28a1c366ef2547c8a5d0ce7ca553758aa54ba15726df70a');
-        $request->headers->set(DiscordRequestHeaderValidator::HEADER_TIMESTAMP, 'test-timestamp');
-
-        self::assertFalse($subject->validate($request));
-    }*/
 }
