@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Security;
 
 use Symfony\Component\HttpFoundation\Request;
 
-interface DiscordRequestHeaderValidatorInterface
+interface RequestValidatorInterface
 {
     /**
      * @param Request $request

@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Throwable;
 
 #[Autoconfigure(public: true)]
-final readonly class DiscordRequestHeaderValidator implements DiscordRequestHeaderValidatorInterface
+final readonly class DiscordRequestValidator implements RequestValidatorInterface
 {
     public const string HEADER_ED25519 = 'X-Signature-Ed25519';
     public const string HEADER_TIMESTAMP = 'X-Signature-Timestamp';

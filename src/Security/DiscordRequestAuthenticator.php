@@ -28,11 +28,11 @@ final class DiscordRequestAuthenticator extends AbstractAuthenticator implements
     public const string AGENT_USER_IDENTIFIER = 'Discord Agent';
 
     /**
-     * @param DiscordRequestHeaderValidator $validator
+     * @param DiscordRequestValidator $validator
      */
     public function __construct(
-        #[Autowire(service: DiscordRequestHeaderValidator::class)]
-        private readonly DiscordRequestHeaderValidatorInterface $validator
+        #[Autowire(service: DiscordRequestValidator::class)]
+        private readonly RequestValidatorInterface $validator
     )
     {
     }
@@ -42,8 +42,8 @@ final class DiscordRequestAuthenticator extends AbstractAuthenticator implements
      */
     public function supports(Request $request): ?bool
     {
-        return $request->headers->has(DiscordRequestHeaderValidator::HEADER_ED25519) &&
-            $request->headers->has(DiscordRequestHeaderValidator::HEADER_TIMESTAMP);
+        return $request->headers->has(DiscordRequestValidator::HEADER_ED25519) &&
+            $request->headers->has(DiscordRequestValidator::HEADER_TIMESTAMP);
     }
 
     /**

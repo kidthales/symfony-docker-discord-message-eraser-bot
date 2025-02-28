@@ -6,20 +6,20 @@ namespace App\Tests\Security;
 
 use App\Exception\DiscordRequestHeaderValidationException;
 use App\Exception\RequestHeaderMissingException;
-use App\Security\DiscordRequestHeaderValidator;
+use App\Security\DiscordRequestValidator;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Throwable;
 
-final class DiscordRequestHeaderValidatorTest extends KernelTestCase
+final class DiscordRequestValidatorTest extends KernelTestCase
 {
     /**
      * The 'system under test'.
-     * @return DiscordRequestHeaderValidator
+     * @return DiscordRequestValidator
      */
-    static private function getSubject(): DiscordRequestHeaderValidator
+    static private function getSubject(): DiscordRequestValidator
     {
-        return self::getContainer()->get(DiscordRequestHeaderValidator::class);
+        return self::getContainer()->get(DiscordRequestValidator::class);
     }
 
     /**
@@ -34,20 +34,20 @@ final class DiscordRequestHeaderValidatorTest extends KernelTestCase
 
         try {
             $subject->validate($request);
-            self::fail('Request header missing exception not thrown (' . DiscordRequestHeaderValidator::HEADER_ED25519 . ')');
+            self::fail('Request header missing exception not thrown (' . DiscordRequestValidator::HEADER_ED25519 . ')');
         } catch (Throwable $e) {
             self::assertInstanceOf(RequestHeaderMissingException::class, $e);
-            self::assertSame('Request header missing: ' . DiscordRequestHeaderValidator::HEADER_ED25519, $e->getMessage());
+            self::assertSame('Request header missing: ' . DiscordRequestValidator::HEADER_ED25519, $e->getMessage());
         }
 
-        $request->headers->set(DiscordRequestHeaderValidator::HEADER_ED25519, 'test-ed25519');
+        $request->headers->set(DiscordRequestValidator::HEADER_ED25519, 'test-ed25519');
 
         try {
             $subject->validate($request);
-            self::fail('Request header missing exception not thrown (' . DiscordRequestHeaderValidator::HEADER_TIMESTAMP . ')');
+            self::fail('Request header missing exception not thrown (' . DiscordRequestValidator::HEADER_TIMESTAMP . ')');
         } catch (Throwable $e) {
             self::assertInstanceOf(RequestHeaderMissingException::class, $e);
-            self::assertSame('Request header missing: ' . DiscordRequestHeaderValidator::HEADER_TIMESTAMP, $e->getMessage());
+            self::assertSame('Request header missing: ' . DiscordRequestValidator::HEADER_TIMESTAMP, $e->getMessage());
         }
     }
 
@@ -60,8 +60,8 @@ final class DiscordRequestHeaderValidatorTest extends KernelTestCase
 
         $subject = self::getSubject();
         $request = Request::create(uri: '/', method: 'POST', content: '"Test"');
-        $request->headers->set(DiscordRequestHeaderValidator::HEADER_ED25519, 'test-ed25519');
-        $request->headers->set(DiscordRequestHeaderValidator::HEADER_TIMESTAMP, 'test-timestamp');
+        $request->headers->set(DiscordRequestValidator::HEADER_ED25519, 'test-ed25519');
+        $request->headers->set(DiscordRequestValidator::HEADER_TIMESTAMP, 'test-timestamp');
 
         try {
             $subject->validate($request);

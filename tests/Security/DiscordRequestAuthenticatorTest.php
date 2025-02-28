@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Security;
 
 use App\Security\DiscordRequestAuthenticator;
-use App\Security\DiscordRequestHeaderValidator;
-use App\Security\DiscordRequestHeaderValidatorInterface;
+use App\Security\DiscordRequestValidator;
+use App\Security\RequestValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -38,16 +40,16 @@ final class DiscordRequestAuthenticatorTest extends KernelTestCase
 
         self::assertFalse($subject->supports($request));
 
-        $request->headers->set(DiscordRequestHeaderValidator::HEADER_ED25519, 'test-ed25519');
+        $request->headers->set(DiscordRequestValidator::HEADER_ED25519, 'test-ed25519');
 
         self::assertFalse($subject->supports($request));
 
-        $request->headers->remove(DiscordRequestHeaderValidator::HEADER_ED25519);
-        $request->headers->set(DiscordRequestHeaderValidator::HEADER_TIMESTAMP, 'test-timestamp');
+        $request->headers->remove(DiscordRequestValidator::HEADER_ED25519);
+        $request->headers->set(DiscordRequestValidator::HEADER_TIMESTAMP, 'test-timestamp');
 
         self::assertFalse($subject->supports($request));
 
-        $request->headers->set(DiscordRequestHeaderValidator::HEADER_ED25519, 'test-ed25519');
+        $request->headers->set(DiscordRequestValidator::HEADER_ED25519, 'test-ed25519');
 
         self::assertTrue($subject->supports($request));
     }
@@ -59,16 +61,16 @@ final class DiscordRequestAuthenticatorTest extends KernelTestCase
     {
         self::bootKernel();
 
-        $validator = self::createMock(DiscordRequestHeaderValidatorInterface::class);
+        $validator = self::createMock(RequestValidatorInterface::class);
         $validator->expects(self::once())
             ->method('validate')
             ->willReturn(true);
-        self::getContainer()->set(DiscordRequestHeaderValidatorInterface::class, $validator);
+        self::getContainer()->set(RequestValidatorInterface::class, $validator);
 
         $subject = self::getSubject();
         $request = Request::create('/');
-        $request->headers->set(DiscordRequestHeaderValidator::HEADER_ED25519, 'test-ed25519');
-        $request->headers->set(DiscordRequestHeaderValidator::HEADER_TIMESTAMP, 'test-timestamp');
+        $request->headers->set(DiscordRequestValidator::HEADER_ED25519, 'test-ed25519');
+        $request->headers->set(DiscordRequestValidator::HEADER_TIMESTAMP, 'test-timestamp');
 
         $result = $subject->authenticate($request);
         self::assertInstanceOf(SelfValidatingPassport::class, $result);
@@ -85,16 +87,16 @@ final class DiscordRequestAuthenticatorTest extends KernelTestCase
     {
         self::bootKernel();
 
-        $validator = self::createMock(DiscordRequestHeaderValidatorInterface::class);
+        $validator = self::createMock(RequestValidatorInterface::class);
         $validator->expects(self::once())
             ->method('validate')
             ->willReturn(false);
-        self::getContainer()->set(DiscordRequestHeaderValidatorInterface::class, $validator);
+        self::getContainer()->set(RequestValidatorInterface::class, $validator);
 
         $subject = self::getSubject();
         $request = Request::create('/');
-        $request->headers->set(DiscordRequestHeaderValidator::HEADER_ED25519, 'test-ed25519');
-        $request->headers->set(DiscordRequestHeaderValidator::HEADER_TIMESTAMP, 'test-timestamp');
+        $request->headers->set(DiscordRequestValidator::HEADER_ED25519, 'test-ed25519');
+        $request->headers->set(DiscordRequestValidator::HEADER_TIMESTAMP, 'test-timestamp');
 
         try {
             $subject->authenticate($request);
@@ -115,8 +117,8 @@ final class DiscordRequestAuthenticatorTest extends KernelTestCase
 
         $subject = self::getSubject();
         $request = Request::create('/');
-        $request->headers->set(DiscordRequestHeaderValidator::HEADER_ED25519, 'test-ed25519');
-        $request->headers->set(DiscordRequestHeaderValidator::HEADER_TIMESTAMP, 'test-timestamp');
+        $request->headers->set(DiscordRequestValidator::HEADER_ED25519, 'test-ed25519');
+        $request->headers->set(DiscordRequestValidator::HEADER_TIMESTAMP, 'test-timestamp');
 
         try {
             $subject->authenticate($request);
