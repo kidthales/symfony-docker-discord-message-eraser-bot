@@ -2,25 +2,17 @@
 
 declare(strict_types=1);
 
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use App\Security\DiscordRequestAuthenticator;
+use Symfony\Config\SecurityConfig;
 
-return static function (ContainerConfigurator $container): void {
-    $container->extension('security', [
-        'providers' => [
-            'users_in_memory' => [
-                'memory' => null,
-            ],
-        ],
-        'firewalls' => [
-            'dev' => [
-                'pattern' => '^/(_(profiler|wdt)|css|images|js)/',
-                'security' => false,
-            ],
-            'main' => [
-                'lazy' => true,
-                'provider' => 'users_in_memory',
-            ],
-        ],
-        'access_control' => null,
-    ]);
+return static function (SecurityConfig $security): void {
+    $memoryProvider = $security->provider('app_user_provider')->memory();
+    $memoryProvider->user(DiscordRequestAuthenticator::AGENT_USER_IDENTIFIER);
+
+    $security->firewall('dev')
+        ->pattern('^/(_(profiler|wdt)|css|images|js)/')
+        ->security(false);
+
+    $security->firewall('main')
+        ->lazy(true);
 };

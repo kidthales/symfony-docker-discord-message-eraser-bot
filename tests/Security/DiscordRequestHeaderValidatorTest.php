@@ -25,7 +25,7 @@ final class DiscordRequestHeaderValidatorTest extends KernelTestCase
     /**
      * @return void
      */
-    public function test_validate_throws_request_header_missing_exception(): void
+    public function test_validate_throw_request_header_missing_exception(): void
     {
         self::bootKernel();
 
@@ -54,7 +54,7 @@ final class DiscordRequestHeaderValidatorTest extends KernelTestCase
     /**
      * @return void
      */
-    public function test_validate_throws_discord_request_header_validation_exception(): void
+    public function test_validate_throw_discord_request_header_validation_exception(): void
     {
         self::bootKernel();
 
