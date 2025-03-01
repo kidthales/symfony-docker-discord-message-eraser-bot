@@ -11,6 +11,7 @@ use App\Enum\Discord\WebhookType;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
@@ -59,15 +60,17 @@ final class DiscordController extends AbstractController implements LoggerAwareI
     private function handleWebhookEvent(?AbstractWebhookEventBody $event): void
     {
         if ($event === null) {
-            return;
+            throw new BadRequestException('null event body');
         }
 
         switch ($event::class) {
             case ApplicationAuthorizedWebhookEventBody::class:
                 $this->logger->info('TODO!');
                 break;
+            // @codeCoverageIgnoreStart
             default:
-                break;
+                throw new BadRequestException('unsupported event body: ' . $event::class);
+            // @codeCoverageIgnoreEnd
         }
     }
 }
