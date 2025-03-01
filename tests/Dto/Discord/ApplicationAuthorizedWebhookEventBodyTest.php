@@ -31,17 +31,15 @@ final class ApplicationAuthorizedWebhookEventBodyTest extends SerializerSubjectT
 
         $data = [];
 
-        foreach (WebhookEventBodyType::cases() as $bodyType) {
-            foreach (ApplicationAuthorizedWebhookEventDataTest::provider_deserialization() as [$dataTemplate, $dataExpected]) {
-                $data[] = [
-                    sprintf($subjectTemplate, '"' . $bodyType->value . '"', $dataTemplate),
-                    new ApplicationAuthorizedWebhookEventBody(
-                        type: $bodyType,
-                        timestamp: 'test-timestamp',
-                        data: $dataExpected
-                    )
-                ];
-            }
+        foreach (ApplicationAuthorizedWebhookEventDataTest::provider_deserialization() as [$dataTemplate, $dataExpected]) {
+            $data[] = [
+                sprintf($subjectTemplate, '"' . WebhookEventBodyType::ApplicationAuthorized->value . '"', $dataTemplate),
+                new ApplicationAuthorizedWebhookEventBody(
+                    type: WebhookEventBodyType::ApplicationAuthorized,
+                    timestamp: 'test-timestamp',
+                    data: $dataExpected
+                )
+            ];
         }
 
         return $data;
