@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Security;
 
-use App\Exception\DiscordRequestHeaderValidationException;
+use App\Exception\DiscordRequestValidationException;
 use App\Exception\RequestHeaderMissingException;
 use App\Security\DiscordRequestValidator;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -67,7 +67,7 @@ final class DiscordRequestValidatorTest extends KernelTestCase
             $subject->validate($request);
             self::fail('Discord request header validation exception not thrown');
         } catch (Throwable $e) {
-            self::assertInstanceOf(DiscordRequestHeaderValidationException::class, $e);
+            self::assertInstanceOf(DiscordRequestValidationException::class, $e);
             self::assertSame('Error occurred during Discord request header validation', $e->getMessage());
             self::assertSame('hex2bin(): Input string must be hexadecimal string', $e->getPrevious()->getMessage());
         }

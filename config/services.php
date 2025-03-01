@@ -19,10 +19,15 @@ return static function (ContainerConfigurator $container): void {
     $services->load('App\\', __DIR__ . '/../src/')
         ->exclude([
             __DIR__ . '/../src/DependencyInjection/',
+            __DIR__ . '/../src/Dto/',
             __DIR__ . '/../src/Entity/',
+            __DIR__ . '/../src/Enum/',
             __DIR__ . '/../src/Exception/',
             __DIR__ . '/../src/Kernel.php',
         ]);
+
+    $services->set('custom_normalizer', \Symfony\Component\Serializer\Normalizer\CustomNormalizer::class)
+        ->tag('serializer.normalizer');
 
     $parameters->set('.container.dumper.inline_factories', true);
 };

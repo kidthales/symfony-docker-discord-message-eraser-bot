@@ -7,7 +7,7 @@ namespace App\Exception;
 use Exception;
 use Throwable;
 
-final class DiscordRequestHeaderValidationException extends Exception
+final class DiscordRequestValidationException extends Exception
 {
     /**
      * @param Throwable|null $previous

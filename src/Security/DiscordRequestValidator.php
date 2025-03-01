@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Security;
 
 use App\DependencyInjection\Parameters;
-use App\Exception\DiscordRequestHeaderValidationException;
+use App\Exception\DiscordRequestValidationException;
 use App\Exception\RequestHeaderMissingException;
 use Elliptic\EdDSA;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
@@ -34,7 +34,7 @@ final readonly class DiscordRequestValidator implements RequestValidatorInterfac
     /**
      * @inheritDoc
      * @throws RequestHeaderMissingException
-     * @throws DiscordRequestHeaderValidationException
+     * @throws DiscordRequestValidationException
      */
     public function validate(Request $request): bool
     {
@@ -53,7 +53,7 @@ final readonly class DiscordRequestValidator implements RequestValidatorInterfac
             $message = [...unpack('C*', $timestamp), ...unpack('C*', $request->getContent())];
             return $this->ec->keyFromPublic($this->publicKey)->verify($message, $signature);
         } catch (Throwable $e) {
-            throw new DiscordRequestHeaderValidationException($e);
+            throw new DiscordRequestValidationException($e);
         }
     }
 }
