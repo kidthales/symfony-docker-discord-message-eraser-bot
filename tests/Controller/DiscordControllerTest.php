@@ -64,9 +64,6 @@ final class DiscordControllerTest extends KernelTestCase
 
         $subject = self::getSubject();
 
-        /**
-         *
-         */
         $result = $subject->webhook(new WebhookEventPayload(
             application_id: 'test-application-id',
             type: WebhookType::Event,
