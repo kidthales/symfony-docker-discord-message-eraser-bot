@@ -4,9 +4,12 @@ Schedule automated message deletion tasks in your Discord channels.
 
 ![CI](https://github.com/kidthales/symfony-docker-discord-message-eraser-bot/workflows/CI/badge.svg)
 
+> ⚠️ Under Development - Not Ready ⚠️
+
 ## Requirements
 
 - [Docker Compose](https://docs.docker.com/compose/install/) (v2.10+)
+- [Ngrok](https://ngrok.com/) (or similar proxy agent for development on localhost)
 
 ## Quick Start
 
