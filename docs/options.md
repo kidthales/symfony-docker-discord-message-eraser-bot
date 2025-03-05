@@ -2,37 +2,6 @@
 
 You can customize the docker build process using these environment variables.
 
-> [!NOTE]  
-> All Symfony-specific environment variables are used only if no `composer.json` file is found in the project directory. 
-
-## Selecting a Specific Symfony Version
-
-Use the `SYMFONY_VERSION` environment variable to select a specific Symfony version.
-
-For instance, use the following command to install Symfony 6.4:
-
-On Linux:
-
-    SYMFONY_VERSION=6.4.* docker compose up -d --wait
-On Windows:
-
-    set SYMFONY_VERSION=6.4.* && docker compose up -d --wait&set SYMFONY_VERSION=
-
-## Installing Development Versions of Symfony
-
-To install a non-stable version of Symfony, use the `STABILITY` environment variable during the build.
-The value must be [a valid Composer stability option](https://getcomposer.org/doc/04-schema.md#minimum-stability).
-
-For instance, use the following command to use the development branch of Symfony:
-
-On Linux:
-
-    STABILITY=dev docker compose up -d --wait
-
-On Windows:
-    
-    set STABILITY=dev && docker compose up -d --wait&set STABILITY=
-
 ## Using custom HTTP ports
 
 Use the environment variables `HTTP_PORT`, `HTTPS_PORT` and/or `HTTP3_PORT` to adjust the ports to your needs, e.g.
@@ -41,15 +10,14 @@ Use the environment variables `HTTP_PORT`, `HTTPS_PORT` and/or `HTTP3_PORT` to a
 
 to access your application on [https://localhost:4443](https://localhost:4443).
 
-> [!NOTE]  
+> [!NOTE]
 > Let's Encrypt only supports the standard HTTP and HTTPS ports. Creating a Let's Encrypt certificate for another port will not work, you have to use the standard ports or to configure Caddy to use another provider.
-
 
 ## Caddyfile Options
 
 You can also customize the `Caddyfile` by using the following environment variables to inject options block, directive or configuration.
 
-> [!TIP]  
+> [!TIP]
 > All the following environment variables can be defined in your `.env` file at the root of the project to keep them persistent at each startup
 
 | Environment variable            | Description                                                                                                                                                                             | Default value             |
