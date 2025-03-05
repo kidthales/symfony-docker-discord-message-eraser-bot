@@ -1,4 +1,5 @@
 # Executables (local)
+DOCKER_RUN  = docker run
 DOCKER_COMP = docker compose
 
 # Docker containers
@@ -11,7 +12,7 @@ SYMFONY  = $(PHP) bin/console
 
 # Misc
 .DEFAULT_GOAL = help
-.PHONY        : help build up start down logs sh composer vendor sf cc test cov test-db
+.PHONY        : help build up start down logs sh composer vendor sf cc test cov test-db ngrok
 
 ## —— 🎵 🐳 The Symfony Docker Makefile 🐳 🎵 ——————————————————————————————————
 help: ## Outputs this help screen
@@ -49,6 +50,9 @@ cov: ## Start tests with phpunit & coverage text, pass the parameter "c=" to add
 test-db: ## Create test database & run migrations
 	@$(SYMFONY) -e test doctrine:database:create --if-not-exists
 	@$(SYMFONY) -e test doctrine:migrations:migrate --no-interaction
+
+ngrok: ## Start the ngrok agent and forward traffic from a public edge endpoint to our app on localhost, assumes NGROK_AUTHTOKEN is set in .env.dev.local
+	@$(DOCKER_RUN) -it --rm --net=host --env-file .env.dev.local ngrok/ngrok http https://localhost:443 --host-header=localhost
 
 ## —— Composer 🧙 ——————————————————————————————————————————————————————————————
 composer: ## Run composer, pass the parameter "c=" to run a given command, example: make composer c='req symfony/orm-pack'
