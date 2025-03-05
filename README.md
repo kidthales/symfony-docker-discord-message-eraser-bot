@@ -13,10 +13,18 @@ Schedule automated message deletion tasks in your Discord channels.
 
 ## Quick Start
 
-1. Run `docker compose build --pull --no-cache` to build fresh images
-2. Run `docker compose up --detach` to start the bot
-3. Open `https://localhost` in your favorite web browser and [accept the auto-generated TLS certificate](https://stackoverflow.com/a/15076602/1352334)
-4. Run `docker compose down --remove-orphans` to stop the Docker containers.
+1. Create the git ignored `.env.dev.local` file and add the following:
+    ```dotenv
+    DISCORD_APP_PUBLIC_KEY=!ChangeThisDiscordAppPublicKey!
+    DISCORD_OAUTH2_CLIENT_ID=!ChangeThisDiscordOAuthClientId!
+    DISCORD_OAUTH2_CLIENT_SECRET=!ChangeThisDiscordOAuthClientSecret!
+    NGROK_AUTHTOKEN=!ChangeThisNgrokAuthToken!
+    ```
+2. Run `docker compose build --pull --no-cache` to build fresh images
+3. Run `docker compose up --detach` to start the bot
+4. Run `docker run -it --rm --net=host --env-file .env.dev.local ngrok/ngrok http https://localhost:443 --host-header=localhost` to start the ngrok agent and forward public traffic
+5. Open `https://localhost` in your favorite web browser and [accept the auto-generated TLS certificate](https://stackoverflow.com/a/15076602/1352334)
+6. Run `docker compose down --remove-orphans` to stop the Docker containers.
 
 ## Docs
 
