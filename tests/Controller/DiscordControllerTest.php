@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Controller;
 
 use App\Controller\DiscordController;
@@ -9,6 +11,8 @@ use App\Dto\Discord\User;
 use App\Dto\Discord\WebhookEventPayload;
 use App\Enum\Discord\WebhookEventBodyType;
 use App\Enum\Discord\WebhookType;
+use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
+use LogicException;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -107,6 +111,24 @@ final class DiscordControllerTest extends KernelTestCase
         } catch (Throwable $e) {
             self::assertInstanceOf(BadRequestException::class, $e);
             self::assertSame('null event body', $e->getMessage());
+        }
+    }
+
+    /**
+     * @return void
+     */
+    public function test_connect_throw_logic_exception_no_current_request(): void
+    {
+        self::bootKernel();
+
+        $subject = self::getSubject();
+
+        try {
+            $subject->connect(self::getContainer()->get(ClientRegistry::class));
+            self::fail('Logic exception not thrown');
+        } catch (Throwable $e) {
+            self::assertInstanceOf(LogicException::class, $e);
+            self::assertStringContainsString('no "current request"', $e->getMessage());
         }
     }
 }

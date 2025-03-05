@@ -47,8 +47,8 @@ cov: ## Start tests with phpunit & coverage text, pass the parameter "c=" to add
 	@$(DOCKER_COMP) exec -e APP_ENV=test -e XDEBUG_MODE=coverage php bin/phpunit --coverage-text $(c)
 
 test-db: ## Create test database & run migrations
-	@$(DOCKER_COMP) exec php bin/console -e test doctrine:database:create --if-not-exists
-	@$(DOCKER_COMP) exec php bin/console -e test doctrine:migrations:migrate --no-interaction
+	@$(SYMFONY) -e test doctrine:database:create --if-not-exists
+	@$(SYMFONY) -e test doctrine:migrations:migrate --no-interaction
 
 ## —— Composer 🧙 ——————————————————————————————————————————————————————————————
 composer: ## Run composer, pass the parameter "c=" to run a given command, example: make composer c='req symfony/orm-pack'

@@ -8,7 +8,10 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 return static function (ContainerConfigurator $container): void {
     $parameters = $container->parameters();
 
-    $parameters->set(Parameters::DISCORD_APP_PUBLIC_KEY, '%env(default::string:DISCORD_APP_PUBLIC_KEY)%');
+    $parameters
+        ->set(Parameters::DISCORD_APP_PUBLIC_KEY, '%env(default::string:DISCORD_APP_PUBLIC_KEY)%')
+        ->set(Parameters::DISCORD_OAUTH2_CLIENT_ID, '%env(default::string:DISCORD_OAUTH2_CLIENT_ID)%')
+        ->set(Parameters::DISCORD_OAUTH2_CLIENT_SECRET, '%env(default::string:DISCORD_OAUTH2_CLIENT_SECRET)%');
 
     $services = $container->services();
 
