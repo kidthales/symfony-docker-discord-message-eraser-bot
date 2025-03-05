@@ -25,9 +25,14 @@ return static function (SecurityConfig $security): void {
         ->provider('app_agent_provider')
         ->customAuthenticators([DiscordRequestAuthenticator::class]);
 
-    $security->firewall('main')
+    $mainFirewall = $security->firewall('main')
         ->lazy(true)
-        ->provider('app_user_provider');
+        ->provider('app_user_provider')
+        ->entryPoint(App\Security\AuthenticationEntryPoint::class)
+        ->customAuthenticators([App\Security\DiscordOAuth2Authenticator::class]);
+    $mainFirewall->logout()
+        ->path('/logout')
+        ->target('app_logout'); // TODO
 
     $security->roleHierarchy(Role::Admin->value, [Role::User->value]);
     $security->roleHierarchy(Role::SuperAdmin->value, [Role::Admin->value]);
