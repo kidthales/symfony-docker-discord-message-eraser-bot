@@ -9,7 +9,7 @@ Schedule automated message deletion tasks in your Discord channels.
 ## Requirements
 
 - [Docker Compose](https://docs.docker.com/compose/install/) (v2.10+)
-- [Ngrok](https://ngrok.com/) (or similar proxy agent for development on localhost)
+- [Ngrok](https://ngrok.com/) (or similar forwarding agent for development on localhost)
 
 ## Quick Start
 
@@ -33,6 +33,7 @@ Schedule automated message deletion tasks in your Discord channels.
 3. [Debugging with Xdebug](docs/xdebug.md)
 4. [TLS Certificates](docs/tls.md)
 5. [Troubleshooting](docs/troubleshooting.md)
+6. [Forwarding Traffic to Localhost](docs/forwarding.md)
 
 ## License
 
