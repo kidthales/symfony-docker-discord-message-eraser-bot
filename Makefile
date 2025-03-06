@@ -12,7 +12,7 @@ SYMFONY  = $(PHP) bin/console
 
 # Misc
 .DEFAULT_GOAL = help
-.PHONY        : help build up start down logs sh composer vendor sf cc test cov test-db ngrok
+.PHONY        : help build up start down logs sh composer vendor sf cc test cov test-db ngrok own
 
 ## —— 🎵 🐳 The Symfony Docker Makefile 🐳 🎵 ——————————————————————————————————
 help: ## Outputs this help screen
@@ -70,3 +70,7 @@ sf: ## List all Symfony commands or pass the parameter "c=" to run a given comma
 
 cc: c=c:c ## Clear the cache
 cc: sf
+
+## —— Troubleshooting 🔎 ———————————————————————————————————————————————————————
+own: ## On Linux host, set current user as owner of the project files that were created by the docker container
+	@$(DOCKER_COMP) run --rm php chown -R $$(id -u):$$(id -g) .
