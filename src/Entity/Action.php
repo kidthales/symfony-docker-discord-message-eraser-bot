@@ -21,8 +21,6 @@ final class Action
      * @var ActionType|null
      */
     #[ORM\Column(type: 'string', length: 128, updatable: false, enumType: ActionType::class)]
-    #[Assert\NotBlank]
-    #[Assert\Length(max: 128)]
     private ?ActionType $type = null;
 
     /**
@@ -44,8 +42,6 @@ final class Action
      * @var ActionStatus|null
      */
     #[ORM\Column(type: 'string', length: 16, updatable: false, enumType: ActionStatus::class)]
-    #[Assert\NotBlank]
-    #[Assert\Length(max: 16)]
     private ?ActionStatus $status = null;
 
     /**
