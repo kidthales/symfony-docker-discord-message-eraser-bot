@@ -25,7 +25,7 @@ final class DiscordRequestAuthenticator extends AbstractAuthenticator implements
 {
     use LoggerAwareTrait;
 
-    public const string AGENT_USER_IDENTIFIER = 'Discord Agent';
+    public const string AGENT_USER_IDENTIFIER = 'agent:discord';
 
     /**
      * @param DiscordRequestValidator $validator

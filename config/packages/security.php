@@ -2,18 +2,24 @@
 
 declare(strict_types=1);
 
+use App\Console\AbstractCommand;
 use App\Enum\Role;
 use App\Security\DiscordRequestAuthenticator;
 use Symfony\Config\SecurityConfig;
 
 return static function (SecurityConfig $security): void {
-    $memoryProvider = $security->provider('app_agent_provider')->memory();
+    $memoryProvider = $security->provider('agent_provider')->memory();
     $memoryProvider->user(DiscordRequestAuthenticator::AGENT_USER_IDENTIFIER)
         ->roles([Role::Agent->value]);
+    $memoryProvider->user(AbstractCommand::AGENT_USER_IDENTIFIER)
+        ->roles([Role::Agent->value, Role::SuperAdmin->value]);
 
-    $security->provider('app_user_provider')->entity()
+    $security->provider('user_provider')->entity()
         ->class(App\Entity\User::class)
         ->property('discordId');
+
+    $security->provider('all_provider')->chain()
+        ->providers(['agent_provider', 'user_provider']);
 
     $security->firewall('dev')
         ->pattern('^/(_(profiler|wdt)|css|images|js)/')
@@ -22,12 +28,12 @@ return static function (SecurityConfig $security): void {
     $security->firewall('webhook_discord')
         ->pattern('^/webhook/discord')
         ->stateless(true)
-        ->provider('app_agent_provider')
+        ->provider('agent_provider')
         ->customAuthenticators([DiscordRequestAuthenticator::class]);
 
     $mainFirewall = $security->firewall('main')
         ->lazy(true)
-        ->provider('app_user_provider')
+        ->provider('user_provider')
         ->entryPoint(App\Security\AuthenticationEntryPoint::class)
         ->customAuthenticators([App\Security\DiscordOAuth2Authenticator::class]);
     $mainFirewall->logout()
