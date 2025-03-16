@@ -16,9 +16,9 @@ use Symfony\Component\Serializer\Exception\ExceptionInterface  as SerializerExce
 #[AsCommand(name: 'app:user:create', description: 'Create user', aliases: ['app:create-user'])]
 final class CreateUserCommand extends AbstractCommand
 {
-    private const string ARG_DISCORD_ID = 'discord_id';
-    private const string OPT_SUPER = 'super';
-    private const string OPT_ADMIN = 'admin';
+    public const string ARG_DISCORD_ID = 'discord_id';
+    public const string OPT_SUPER = 'super';
+    public const string OPT_ADMIN = 'admin';
 
     /**
      * @return void
@@ -49,7 +49,7 @@ final class CreateUserCommand extends AbstractCommand
         }
 
         $this->io->definitionList(
-            $this->definitionListConverter->convert(
+            ...$this->definitionListConverter->convert(
                 $this->actionDispatcher->createUser(
                     new CreateUserPayload($input->getArgument(self::ARG_DISCORD_ID), $roles),
                     true
