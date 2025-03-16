@@ -2,28 +2,30 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\MessageHandler;
+namespace App\Tests\Messenger;
 
 use App\Dto\CreateUserPayload;
+use App\Entity\User;
 use App\Enum\ActionStatus;
 use App\Enum\ActionType;
-use App\MessageHandler\ActionRecorder;
+use App\Messenger\ActionDispatcher;
 use App\Repository\ActionRepository;
 use App\Security\TokenStack;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\Exception\ExceptionInterface as MessengerExceptionInterface;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
-use Symfony\Component\Serializer\Exception\ExceptionInterface as SerializerExceptionInterface;
 use Throwable;
 
-final class ActionRecorderTest extends KernelTestCase
+final class ActionDispatcherTest extends KernelTestCase
 {
     /**
      * The 'system under test'.
-     * @return ActionRecorder
+     * @return ActionDispatcher
      */
-    static private function getSubject(): ActionRecorder
+    static private function getSubject(): ActionDispatcher
     {
-        return self::getContainer()->get(ActionRecorder::class);
+        return self::getContainer()->get(ActionDispatcher::class);
     }
 
     /**
@@ -36,7 +38,7 @@ final class ActionRecorderTest extends KernelTestCase
         $subject = self::getSubject();
 
         try {
-            $subject->fail(ActionType::CreateUser, new CreateUserPayload(1137), ['Test details.']);
+            $subject->createUser(new CreateUserPayload(1137));
             self::fail('User not found exception not thrown');
         } catch (Throwable $e) {
             self::assertInstanceOf(UserNotFoundException::class, $e);
@@ -45,9 +47,9 @@ final class ActionRecorderTest extends KernelTestCase
 
     /**
      * @return void
-     * @throws SerializerExceptionInterface
+     * @throws MessengerExceptionInterface
      */
-    public function test_pass(): void
+    public function test_createUser_async(): void
     {
         self::bootKernel();
 
@@ -56,7 +58,28 @@ final class ActionRecorderTest extends KernelTestCase
         $tokenStack = self::getContainer()->get(TokenStack::class);
         $tokenStack->push('agent:cli');
 
-        $subject->pass(ActionType::CreateUser, new CreateUserPayload(1137), ['Test details.']);
+        $result = $subject->createUser(new CreateUserPayload(1137));
+
+        self::assertInstanceOf(Envelope::class, $result);
+    }
+
+    /**
+     * @return void
+     * @throws MessengerExceptionInterface
+     */
+    public function test_createUser_sync(): void
+    {
+        self::bootKernel();
+
+        $subject = self::getSubject();
+        /** @var TokenStack $tokenStack */
+        $tokenStack = self::getContainer()->get(TokenStack::class);
+        $tokenStack->push('agent:cli');
+
+        $result = $subject->createUser(new CreateUserPayload(1137), true);
+
+        self::assertInstanceOf(User::class, $result);
+        self::assertSame(1137, $result->getDiscordId());
 
         /** @var ActionRepository $actionRepository */
         $actionRepository = self::getContainer()->get(ActionRepository::class);
@@ -68,34 +91,6 @@ final class ActionRecorderTest extends KernelTestCase
         self::assertSame('agent:cli', $action->getActor());
         self::assertSame(1137, $action->getPayload()['discordId']);
         self::assertSame(ActionStatus::Pass, $action->getStatus());
-        self::assertSame('Test details.', $action->getDetails()[0]);
-    }
-
-    /**
-     * @return void
-     * @throws SerializerExceptionInterface
-     */
-    public function test_warn(): void
-    {
-        self::bootKernel();
-
-        $subject = self::getSubject();
-        /** @var TokenStack $tokenStack */
-        $tokenStack = self::getContainer()->get(TokenStack::class);
-        $tokenStack->push('agent:cli');
-
-        $subject->warn(ActionType::CreateUser, new CreateUserPayload(2237), ['Test details.']);
-
-        /** @var ActionRepository $actionRepository */
-        $actionRepository = self::getContainer()->get(ActionRepository::class);
-
-        self::assertSame(1, $actionRepository->count());
-
-        $action = $actionRepository->findOneBy([]);
-        self::assertSame(ActionType::CreateUser, $action->getType());
-        self::assertSame('agent:cli', $action->getActor());
-        self::assertSame(2237, $action->getPayload()['discordId']);
-        self::assertSame(ActionStatus::Warn, $action->getStatus());
-        self::assertSame('Test details.', $action->getDetails()[0]);
+        self::assertStringContainsString('User ID ', $action->getDetails()[0]);
     }
 }

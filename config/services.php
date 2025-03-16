@@ -26,6 +26,7 @@ return static function (ContainerConfigurator $container): void {
             __DIR__ . '/../src/Entity/',
             __DIR__ . '/../src/Enum/',
             __DIR__ . '/../src/Exception/',
+            __DIR__ . '/../src/Message/',
             __DIR__ . '/../src/Kernel.php',
         ]);
 

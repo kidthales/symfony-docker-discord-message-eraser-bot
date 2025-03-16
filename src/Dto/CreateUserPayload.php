@@ -10,7 +10,7 @@ final readonly class CreateUserPayload
 {
     /**
      * @param int|string $discordId
-     * @param array $roles
+     * @param string[] $roles
      */
     public function __construct(#[Assert\NotBlank] public int|string $discordId, public array $roles = [])
     {
