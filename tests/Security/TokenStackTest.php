@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Security;
 
+use App\Console\AbstractCommand;
 use App\Security\DiscordRequestAuthenticator;
 use App\Security\TokenStack;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -69,16 +70,16 @@ final class TokenStackTest extends KernelTestCase
         self::assertSame(DiscordRequestAuthenticator::AGENT_USER_IDENTIFIER, $security->getUser()->getUserIdentifier());
         self::assertSame(1, $subject->size());
 
-        $result = $subject->push('agent:cli');
+        $result = $subject->push(AbstractCommand::AGENT_USER_IDENTIFIER);
 
-        self::assertSame('agent:cli', $result->getUserIdentifier());
-        self::assertSame('agent:cli', $security->getUser()->getUserIdentifier());
+        self::assertSame(AbstractCommand::AGENT_USER_IDENTIFIER, $result->getUserIdentifier());
+        self::assertSame(AbstractCommand::AGENT_USER_IDENTIFIER, $security->getUser()->getUserIdentifier());
         self::assertSame(2, $subject->size());
 
-        $result = $subject->push('agent:cli');
+        $result = $subject->push(AbstractCommand::AGENT_USER_IDENTIFIER);
 
-        self::assertSame('agent:cli', $result->getUserIdentifier());
-        self::assertSame('agent:cli', $security->getUser()->getUserIdentifier());
+        self::assertSame(AbstractCommand::AGENT_USER_IDENTIFIER, $result->getUserIdentifier());
+        self::assertSame(AbstractCommand::AGENT_USER_IDENTIFIER, $security->getUser()->getUserIdentifier());
         self::assertSame(3, $subject->size());
 
         $expectedToken = $security->getToken();

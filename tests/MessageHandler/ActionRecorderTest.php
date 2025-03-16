@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\MessageHandler;
 
+use App\Console\AbstractCommand;
 use App\Dto\CreateUserPayload;
 use App\Enum\ActionStatus;
 use App\Enum\ActionType;
@@ -54,7 +55,7 @@ final class ActionRecorderTest extends KernelTestCase
         $subject = self::getSubject();
         /** @var TokenStack $tokenStack */
         $tokenStack = self::getContainer()->get(TokenStack::class);
-        $tokenStack->push('agent:cli');
+        $tokenStack->push(AbstractCommand::AGENT_USER_IDENTIFIER);
 
         $subject->pass(ActionType::CreateUser, new CreateUserPayload(1137), ['Test details.']);
 
@@ -65,7 +66,7 @@ final class ActionRecorderTest extends KernelTestCase
 
         $action = $actionRepository->findOneBy([]);
         self::assertSame(ActionType::CreateUser, $action->getType());
-        self::assertSame('agent:cli', $action->getActor());
+        self::assertSame(AbstractCommand::AGENT_USER_IDENTIFIER, $action->getActor());
         self::assertSame(1137, $action->getPayload()['discordId']);
         self::assertSame(ActionStatus::Pass, $action->getStatus());
         self::assertSame('Test details.', $action->getDetails()[0]);
@@ -82,7 +83,7 @@ final class ActionRecorderTest extends KernelTestCase
         $subject = self::getSubject();
         /** @var TokenStack $tokenStack */
         $tokenStack = self::getContainer()->get(TokenStack::class);
-        $tokenStack->push('agent:cli');
+        $tokenStack->push(AbstractCommand::AGENT_USER_IDENTIFIER);
 
         $subject->warn(ActionType::CreateUser, new CreateUserPayload(2237), ['Test details.']);
 
@@ -93,7 +94,7 @@ final class ActionRecorderTest extends KernelTestCase
 
         $action = $actionRepository->findOneBy([]);
         self::assertSame(ActionType::CreateUser, $action->getType());
-        self::assertSame('agent:cli', $action->getActor());
+        self::assertSame(AbstractCommand::AGENT_USER_IDENTIFIER, $action->getActor());
         self::assertSame(2237, $action->getPayload()['discordId']);
         self::assertSame(ActionStatus::Warn, $action->getStatus());
         self::assertSame('Test details.', $action->getDetails()[0]);

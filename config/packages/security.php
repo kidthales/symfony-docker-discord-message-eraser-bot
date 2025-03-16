@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Console\AbstractCommand;
 use App\Enum\Role;
 use App\Security\DiscordRequestAuthenticator;
 use Symfony\Config\SecurityConfig;
@@ -10,7 +11,7 @@ return static function (SecurityConfig $security): void {
     $memoryProvider = $security->provider('agent_provider')->memory();
     $memoryProvider->user(DiscordRequestAuthenticator::AGENT_USER_IDENTIFIER)
         ->roles([Role::Agent->value]);
-    $memoryProvider->user('agent:cli')
+    $memoryProvider->user(AbstractCommand::AGENT_USER_IDENTIFIER)
         ->roles([Role::Agent->value, Role::SuperAdmin->value]);
 
     $security->provider('user_provider')->entity()

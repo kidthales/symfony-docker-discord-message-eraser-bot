@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Messenger;
 
+use App\Console\AbstractCommand;
 use App\Dto\CreateUserPayload;
 use App\Entity\User;
 use App\Enum\ActionStatus;
@@ -56,7 +57,7 @@ final class ActionDispatcherTest extends KernelTestCase
         $subject = self::getSubject();
         /** @var TokenStack $tokenStack */
         $tokenStack = self::getContainer()->get(TokenStack::class);
-        $tokenStack->push('agent:cli');
+        $tokenStack->push(AbstractCommand::AGENT_USER_IDENTIFIER);
 
         $result = $subject->createUser(new CreateUserPayload(1137));
 
@@ -74,7 +75,7 @@ final class ActionDispatcherTest extends KernelTestCase
         $subject = self::getSubject();
         /** @var TokenStack $tokenStack */
         $tokenStack = self::getContainer()->get(TokenStack::class);
-        $tokenStack->push('agent:cli');
+        $tokenStack->push(AbstractCommand::AGENT_USER_IDENTIFIER);
 
         $result = $subject->createUser(new CreateUserPayload(1137), true);
 
@@ -88,7 +89,7 @@ final class ActionDispatcherTest extends KernelTestCase
 
         $action = $actionRepository->findOneBy([]);
         self::assertSame(ActionType::CreateUser, $action->getType());
-        self::assertSame('agent:cli', $action->getActor());
+        self::assertSame(AbstractCommand::AGENT_USER_IDENTIFIER, $action->getActor());
         self::assertSame(1137, $action->getPayload()['discordId']);
         self::assertSame(ActionStatus::Pass, $action->getStatus());
         self::assertStringContainsString('User ID ', $action->getDetails()[0]);
