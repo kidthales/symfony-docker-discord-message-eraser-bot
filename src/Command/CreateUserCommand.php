@@ -43,9 +43,9 @@ final class CreateUserCommand extends AbstractCommand
     {
         $roles = [];
         if ($input->getOption(self::OPT_SUPER)) {
-            $roles[] = Role::SuperAdmin->value;
+            $roles[] = Role::SuperAdmin;
         } else if ($input->getOption(self::OPT_ADMIN)) {
-            $roles[] = Role::Admin->value;
+            $roles[] = Role::Admin;
         }
 
         $this->io->definitionList(

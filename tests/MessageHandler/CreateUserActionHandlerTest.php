@@ -49,7 +49,7 @@ final class CreateUserActionHandlerTest extends KernelTestCase
         }
 
         try {
-            call_user_func($subject, new CreateUserAction($token->getUserIdentifier(), new CreateUserPayload(1137, [Role::Admin->value])));
+            call_user_func($subject, new CreateUserAction($token->getUserIdentifier(), new CreateUserPayload(1137, [Role::Admin])));
             self::fail('Unauthorized action exception not thrown');
         } catch (Throwable $e) {
             self::assertInstanceOf(UnauthorizedActionException::class, $e);

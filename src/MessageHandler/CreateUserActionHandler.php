@@ -58,7 +58,7 @@ final class CreateUserActionHandler extends AbstractActionHandler
         $requiredRole = Role::Admin->value;
 
         foreach ($payload->roles as $role) {
-            if (in_array($role, [Role::Admin->value, Role::SuperAdmin->value])) {
+            if (in_array($role, [Role::Admin, Role::SuperAdmin])) {
                 $requiredRole = Role::SuperAdmin->value;
                 break;
             }
@@ -84,7 +84,7 @@ final class CreateUserActionHandler extends AbstractActionHandler
 
         $user = new User();
         $user->setDiscordId($payload->discordId);
-        $user->setRoles($payload->roles);
+        $user->setRoles(array_map(fn ($role) => $role->value, $payload->roles));
 
         $errors = $this->validator->validate($user);
 
